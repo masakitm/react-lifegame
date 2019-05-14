@@ -1,7 +1,8 @@
 import React from 'react';
-import Board from './Board'
+import './App.css';
+import Board from './Board';
 
-function App() {
+const App: React.FC = () => {
 	return <Board time={1000} boardSize={20} spawnRate={25} cellSize={16} />;
 }
 

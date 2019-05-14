@@ -1,27 +1,31 @@
-import React from "react";
+import * as React from "react";
 import { createNeighbourIndex, isRight, isBottom } from "./utils/boardHelpers";
 
-const createBoardStatus = size => new Array(size * size).fill(initCell());
+const createBoardStatus = (size: number) => new Array(size * size).fill(initCell());
 
-const setInitCellNeighbours = (size, index) => ({ 
+type CellNeighbours = { neighbours: number[] }
+const setInitCellNeighbours = (size: number, index: number): CellNeighbours => ({ 
 	neighbours: createNeighbourIndex(size, index) 
 })
 
-const setInitCellLive = spawnRate => {
+type CellLive = { live: boolean }
+const setInitCellLive = (spawnRate: number): CellLive => {
   return {
     live: spawnRate > Math.floor(Math.random() * 100)
   };
 };
 
-const setInitCellId = index => ({ 
+type CellId = { id: string }
+const setInitCellId = (index: number): CellId => ({ 
 	id: `id${(index || 0)}` 
 });
 
-const initCell = () => ({
+type InitCell = { live: boolean }
+const initCell = (): InitCell => ({
   live: false,
 });
 
-const initState = () => ({
+const initState = (): State => ({
 	time: 1000,
 	cellSize: 8,
 	spawnRate: 25,
@@ -29,7 +33,7 @@ const initState = () => ({
 	boardStatus: createBoardStatus(8)
 })
 
-const createDefaultState = props => ({
+const createDefaultState = (props: Props) => ({
 	time: props.time || initState().time,
 	cellSize: props.cellSize > 0 ? props.cellSize : initState().cellSize,
 	spawnRate: props.spawnRate > 0 && props.spawnRate <= 100 ? props.spawnRate : initState().spawnRate, // 0〜100
@@ -41,8 +45,29 @@ const createDefaultState = props => ({
 
 const reloadPage = () => window.location.reload()
 
-class Board extends React.Component {
-  constructor(props) {
+type Cell = {
+	id: string,
+	live: boolean,
+	neighbours: number[],
+}
+
+type State = {
+	time: number,
+	cellSize: number,
+	spawnRate: number,
+	boardSize: number,
+	boardStatus: number[] | any
+}
+
+type Props = {
+	time: number,
+	cellSize: number,
+	spawnRate: number,
+	boardSize: number
+}
+
+class Board extends React.Component<Props, State> {
+  constructor(props: Props) {
 		super(props);
 		
     this.state = {
@@ -59,19 +84,19 @@ class Board extends React.Component {
 
 	hasFinished() {
 		const { boardStatus } = this.state
-		return boardStatus.every(cell => cell.live === false)
+		return boardStatus.every((cell: Cell) => cell.live === false)
 	}
 
-	countLivingNeighbours(neighbourList) {
+	countLivingNeighbours(neighbourList: number[]) {
 		const { boardStatus } = this.state
-		const live = neighbourList.map(num => {
+		const live = neighbourList.map((num: number) => {
 			return boardStatus[num].live
 		})
 
 		return live.filter(live => live).length
 	}
 
-	updateLive(neighbourList, isLive) {
+	updateLive(neighbourList: number[], isLive: boolean) {
 		const liveCount = this.countLivingNeighbours(neighbourList)
 		
 		if (liveCount >= 4 || liveCount <= 1) {
@@ -91,11 +116,10 @@ class Board extends React.Component {
 
 	runLifeCycle() {
 		if (this.hasFinished()) { 
-			clearInterval(this.start)
 			return 
 		}
 
-		const { boardStatus } = this.state
+		const { boardStatus }: { boardStatus: Cell[] } = this.state
 		const nextBoardStatus = boardStatus.map(cell => {
 			const live = this.updateLive(cell.neighbours, cell.live)
 			return { ...cell, live }
@@ -107,7 +131,7 @@ class Board extends React.Component {
   async initBoardStatus() {
     //　ボード初期化
     const { boardStatus, spawnRate, boardSize } = this.state;
-    const newStatus = boardStatus.map((cell, index) => {
+    const newStatus = boardStatus.map((cell: Cell, index: number) => {
       return {
         ...cell,
         ...setInitCellId(index),
@@ -128,7 +152,7 @@ class Board extends React.Component {
 	start() {
 		const { runLifeCycle } = this
 		const { time } = this.state
-		this.lifeCycle = setInterval(runLifeCycle, time)
+		setInterval(runLifeCycle, time)
 	}
 
   render() {
@@ -143,7 +167,7 @@ class Board extends React.Component {
 				</div>
 
         <div style={{ fontSize: 0 }}>
-          {boardStatus.map((cell, index) => (	
+          {boardStatus.map((cell: Cell, index: number): React.ReactNode => (	
 						<span 
 							key={cell.id}
 						>
@@ -159,7 +183,8 @@ class Board extends React.Component {
   }
 }
 
-const generateStyle = (cellSize, live, boardSize, index) => {
+
+const generateStyle = (cellSize: number, live: boolean, boardSize: number, index: number): React.CSSProperties => {
   const border = "1px solid #000";
   return {
     display: "inline-block",
