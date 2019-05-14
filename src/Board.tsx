@@ -26,7 +26,7 @@ const initCell = (): Cell => ({
 	neighbours: []
 });
 
-const reloadPage = () => window.location.reload()
+const reloadPage = (): void => window.location.reload()
 
 type Cell = {
 	id: string,
@@ -68,7 +68,7 @@ class Board extends React.Component<Props, State> {
 
 	countLivingNeighbours(neighbourList: number[]): number {
 		const { boardStatus } = this.state
-		const live = neighbourList.map((num: number) => {
+		const live = neighbourList.map((num: number): boolean => {
 			return boardStatus[num].live
 		})
 
@@ -98,8 +98,8 @@ class Board extends React.Component<Props, State> {
 			return 
 		}
 
-		const { boardStatus }: { boardStatus: Cell[] } = this.state
-		const nextBoardStatus = boardStatus.map(cell => {
+		const { boardStatus } = this.state
+		const nextBoardStatus: Cell[] = boardStatus.map(cell => {
 			const live = this.updateLive(cell.neighbours, cell.live)
 			return { ...cell, live }
 		})
@@ -107,7 +107,7 @@ class Board extends React.Component<Props, State> {
 		this.setState({ boardStatus: nextBoardStatus});
 	}
 
-  async initBoardStatus() {
+  initBoardStatus() {
     //　ボード初期化
 		const { spawnRate, boardSize } = this.props;
 	
@@ -120,7 +120,7 @@ class Board extends React.Component<Props, State> {
       };
     });
 
-    await this.setState({
+    this.setState({
       boardStatus: newStatus
 		});
 	}
