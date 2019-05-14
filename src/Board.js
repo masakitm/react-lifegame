@@ -3,29 +3,17 @@ import { createNeighbourIndex, isRight, isBottom } from "./utils/boardHelpers";
 
 const createBoardStatus = size => new Array(size * size).fill(initCell());
 
-const setCellNeighbours = (size, index) => ({ 
+const setInitCellNeighbours = (size, index) => ({ 
 	neighbours: createNeighbourIndex(size, index) 
 })
 
-const setCellLive = spawnRate => {
-  const rate = () => {
-    if (spawnRate < 0) {
-      return 0;
-    }
-
-    if (spawnRate > 100) {
-      return 100;
-    }
-
-    return spawnRate;
-  };
-
+const setInitCellLive = spawnRate => {
   return {
-    live: rate() > Math.floor(Math.random() * 100)
+    live: spawnRate > Math.floor(Math.random() * 100)
   };
 };
 
-const setCellId = index => ({ 
+const setInitCellId = index => ({ 
 	id: `id${(index || 0)}` 
 });
 
@@ -33,17 +21,32 @@ const initCell = () => ({
   live: false,
 });
 
+const initState = () => ({
+	time: 1000,
+	cellSize: 8,
+	spawnRate: 25,
+	boardSize: 8,
+	boardStatus: createBoardStatus(8)
+})
+
+const createDefaultState = props => ({
+	time: props.time || initState().time,
+	cellSize: props.cellSize > 0 ? props.cellSize : initState().cellSize,
+	spawnRate: props.spawnRate > 0 && props.spawnRate <= 100 ? props.spawnRate : initState().spawnRate, // 0〜100
+	boardSize: props.boardSize > 0 ? props.boardSize : initState().boardSize,
+	boardStatus: props.boardSize
+		? createBoardStatus(props.boardSize)
+		: initState().boardSize
+})
+
+const reloadPage = () => window.location.reload()
+
 class Board extends React.Component {
   constructor(props) {
-    super(props);
+		super(props);
+		
     this.state = {
-      time: props.time || 1000,
-      cellSize: props.cellSize || 8,
-      spawnRate: props.spawnRate || 25, // 0〜100
-      boardSize: props.boardSize || 8,
-      boardStatus: props.boardSize
-        ? createBoardStatus(props.boardSize)
-        : createBoardStatus(8)
+      ...createDefaultState(props)
 		};
 		
 		this.hasFinished = this.hasFinished.bind(this)
@@ -52,7 +55,6 @@ class Board extends React.Component {
 		this.runLifeCycle = this.runLifeCycle.bind(this)
 		this.initBoardStatus = this.initBoardStatus.bind(this)
 		this.start = this.start.bind(this)
-		this.reset = this.initBoardStatus.bind(this)
 	}
 
 	hasFinished() {
@@ -108,9 +110,9 @@ class Board extends React.Component {
     const newStatus = boardStatus.map((cell, index) => {
       return {
         ...cell,
-        ...setCellId(index),
-				...setCellLive(spawnRate),
-				...setCellNeighbours(boardSize, index)
+        ...setInitCellId(index),
+				...setInitCellLive(spawnRate),
+				...setInitCellNeighbours(boardSize, index)
       };
     });
 
@@ -123,19 +125,10 @@ class Board extends React.Component {
 		this.initBoardStatus();
 	}
 
-	componentWillUnmount() {
-    clearInterval(this.lifeCycle);
-  }
-	
 	start() {
 		const { runLifeCycle } = this
 		const { time } = this.state
 		this.lifeCycle = setInterval(runLifeCycle, time)
-	}
-
-	reset() {
-		clearInterval(this.lifeCycle);
-		this.initBoardStatus()
 	}
 
   render() {
@@ -144,9 +137,16 @@ class Board extends React.Component {
       <div>
         <h1>life gaming</h1>
 
+				<div>
+					<button onClick={this.start}>start</button>
+					<button onClick={reloadPage}>reload</button>
+				</div>
+
         <div style={{ fontSize: 0 }}>
-          {boardStatus.map((cell, index) => (
-            <span key={cell.id}>
+          {boardStatus.map((cell, index) => (	
+						<span 
+							key={cell.id}
+						>
 							<i
                 style={generateStyle(cellSize, cell.live, boardSize, index)}
               />
