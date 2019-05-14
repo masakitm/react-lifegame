@@ -26,7 +26,7 @@ const setCellLive = spawnRate => {
 };
 
 const setCellId = index => ({ 
-	id: index || 0 
+	id: `id${(index || 0)}` 
 });
 
 const initCell = () => ({
@@ -44,7 +44,15 @@ class Board extends React.Component {
       boardStatus: props.boardSize
         ? createBoardStatus(props.boardSize)
         : createBoardStatus(8)
-    };
+		};
+		
+		this.hasFinished = this.hasFinished.bind(this)
+		this.countLivingNeighbours = this.countLivingNeighbours.bind(this)
+		this.updateLive = this.updateLive.bind(this)
+		this.runLifeCycle = this.runLifeCycle.bind(this)
+		this.initBoardStatus = this.initBoardStatus.bind(this)
+		this.start = this.start.bind(this)
+		this.reset = this.initBoardStatus.bind(this)
 	}
 
 	hasFinished() {
@@ -63,6 +71,7 @@ class Board extends React.Component {
 
 	updateLive(neighbourList, isLive) {
 		const liveCount = this.countLivingNeighbours(neighbourList)
+		
 		if (liveCount >= 4 || liveCount <= 1) {
 			return false
 		}
@@ -78,22 +87,19 @@ class Board extends React.Component {
 		return isLive
 	}
 
-	runLifeCycles() {
-		if (this.hasFinished) { 
-			clearInterval(this.repeater)
+	runLifeCycle() {
+		if (this.hasFinished()) { 
+			clearInterval(this.start)
 			return 
 		}
 
-		console.log(this)
-
 		const { boardStatus } = this.state
-		boardStatus.map(cell => {
-			return { ...cell, live: this.updateLive(cell.neighbours, cell.live) }
+		const nextBoardStatus = boardStatus.map(cell => {
+			const live = this.updateLive(cell.neighbours, cell.live)
+			return { ...cell, live }
 		})
-	}
 
-	repeater() {
-		setInterval(() => { this.runLifeCycles(); console.log()} , 1000)
+		this.setState({ boardStatus: nextBoardStatus});
 	}
 
   async initBoardStatus() {
@@ -113,9 +119,23 @@ class Board extends React.Component {
 		});
 	}
 
-  async componentDidMount() {
-		await this.initBoardStatus();
-		this.repeater()
+  componentDidMount() {
+		this.initBoardStatus();
+	}
+
+	componentWillUnmount() {
+    clearInterval(this.lifeCycle);
+  }
+	
+	start() {
+		const { runLifeCycle } = this
+		const { time } = this.state
+		this.lifeCycle = setInterval(runLifeCycle, time)
+	}
+
+	reset() {
+		clearInterval(this.lifeCycle);
+		this.initBoardStatus()
 	}
 
   render() {
@@ -127,7 +147,7 @@ class Board extends React.Component {
         <div style={{ fontSize: 0 }}>
           {boardStatus.map((cell, index) => (
             <span key={cell.id}>
-							<span
+							<i
                 style={generateStyle(cellSize, cell.live, boardSize, index)}
               />
               {isRight(boardSize, index) && <br />}
