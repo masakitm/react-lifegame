@@ -1,11 +1,10 @@
-{ 
-	"env": {
-	 "es6": true,
-	 "browser": true
+{
+  "env": {
+    "es6": true,
+    "browser": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:prettier/recommended"
+    "airbnb"
   ],
   "plugins": [
     "@typescript-eslint"
@@ -16,5 +15,23 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-	}
+    "indent": ["error", 2],
+    "no-tabs": 1,
+    "import/no-unresolved": "error",
+    "react/jsx-filename-extension": [1, { "extensions": [".jsx", "tsx"] }],
+    "prettier/prettier": {
+      "tabWidth": 2,
+      "useTabs": false,
+      "semi": true,
+      "singleQuote": true
+    }
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }
