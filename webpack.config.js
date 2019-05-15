@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-	entry: './src/index.js',
+	entry: './src/index.tsx',
 	devtool: "inline-source-map",
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -23,11 +23,11 @@ module.exports = {
 				test: /\.(js)$/,
 				exclude: /node_modules/,
 				use: [{
-						loader: 'source-map-loader',
-						options: {
-							enforce: 'pre',
-							presets: ['@babel/preset-env', '@babel/preset-react']
-						}
+					loader: 'source-map-loader',
+					options: {
+						enforce: 'pre',
+						presets: ['@babel/preset-env', '@babel/preset-react']
+					}
 				}]
 			},
 			{

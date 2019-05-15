@@ -3,7 +3,7 @@ import React from 'react'
 const App: React.FC = () => (
 	<div>
 		Hello, React
-	</div>
+  </div>
 )
 
 export default App
