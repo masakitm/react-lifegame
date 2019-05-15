@@ -9,11 +9,9 @@ const setInitCellNeighbours = (size: number, index: number): CellNeighbours => (
 })
 
 type CellLive = { live: boolean }
-const setInitCellLive = (spawnRate: number): CellLive => {
-  return {
-    live: spawnRate > Math.floor(Math.random() * 100)
-  };
-};
+const setInitCellLive = (spawnRate: number): CellLive => ({
+	live: spawnRate > Math.floor(Math.random() * 100)
+});
 
 type CellId = { id: string }
 const setInitCellId = (index: number): CellId => ({ 
