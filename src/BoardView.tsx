@@ -3,12 +3,14 @@ import { isRight, isBottom } from './utils/boardHelpers';
 
 const reloadPage = (): void => window.location.reload();
 
-const generateStyle = (
+type GenerateStyle = (
   cellSize: number,
   live: boolean,
   boardSize: number,
   index: number,
-): React.CSSProperties => {
+) => React.CSSProperties
+
+const generateStyle: GenerateStyle = (cellSize, live, boardSize, index) => {
   const border = '1px solid #000';
   return {
     display: 'inline-block',
