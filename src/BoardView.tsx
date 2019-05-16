@@ -28,14 +28,7 @@ const generateStyle: GenerateStyle = (cellSize, live, boardSize, index) => {
   };
 };
 
-type Props = {
-  boardSize: number,
-  cellSize: number,
-  boardStatus: Cell[],
-  start: () => void,
-}
-
-const Board = (props: Props) => {
+const Board = (props: BoardViewProps) => {
   const {
     boardSize,
     cellSize,
