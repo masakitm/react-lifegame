@@ -33,9 +33,8 @@ type BoardProps = {
   cellSize: number,
   spawnRate: number,
   boardSize: number,
-  render: (props: any) => JSX.Element,
+  render: (props: BoardViewProps) => JSX.Element,
 }
-
 class Board extends React.Component<BoardProps, BoardState> {
   constructor(props: BoardProps) {
     super(props);
@@ -53,7 +52,6 @@ class Board extends React.Component<BoardProps, BoardState> {
   }
 
   componentDidMount(): void {
-    console.log(this.props);
     this.initBoardStatus();
   }
 
