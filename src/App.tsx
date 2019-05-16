@@ -9,7 +9,7 @@ const App: React.FC = () => (
     spawnRate={25}
     cellSize={16}
     render={
-      (props: any) => <BoardView {...props} />
+      (props: BoardViewProps) => <BoardView {...props} />
     }
   />
 );
