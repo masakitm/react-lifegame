@@ -28,15 +28,15 @@ type BoardState = {
   boardStatus: Cell[]
 }
 
-type BoardProps = {
+type BoardContainerProps = {
   time: number,
   cellSize: number,
   spawnRate: number,
   boardSize: number,
   render: (props: BoardViewProps) => JSX.Element,
 }
-class Board extends React.Component<BoardProps, BoardState> {
-  constructor(props: BoardProps) {
+class Board extends React.Component<BoardContainerProps, BoardState> {
+  constructor(props: BoardContainerProps) {
     super(props);
 
     this.state = {

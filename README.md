@@ -21,7 +21,7 @@ https://stackoverflow.com/questions/43595555/webpack-cant-resolve-typescript-mod
 
 ``` js
 type ChildProps = {
-	// 子に渡したいpropsの型を定義
+  // 子に渡したいpropsの型を定義
 }
 
 // 親コンポーネントで `render` propsを呼び出す 
