@@ -15,3 +15,25 @@ https://github.com/alexgorbatchev/eslint-import-resolver-typescript
 
 * Module not found: Error: Can't resolve '.tsファイル'
 https://stackoverflow.com/questions/43595555/webpack-cant-resolve-typescript-modules
+
+
+### renderpropsについて
+
+``` js
+type ChildProps = {
+	// 子に渡したいpropsの型を定義
+}
+
+// 親コンポーネントで `render` propsを呼び出す 
+const Parent = ({ render }) => (
+  <div>
+    {render(子に渡したいpropsを書く)}
+  </div>
+)
+
+// 親コンポーネントに render という props を追加
+// propsをつけた子コンポーネントを返す
+const SomeWrapperComponent => () => (
+  <Parent render={ props: ChildProps => <Child { ...props } /> } />
+)
+```
