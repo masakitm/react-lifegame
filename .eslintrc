@@ -16,7 +16,7 @@
   },
   "rules": {
     "indent": ["error", 2],
-    "no-tabs": 1,
+    "no-tabs": ["error"],
     "import/no-unresolved": "error",
     "react/jsx-filename-extension": [1, { "extensions": [".jsx", "tsx"] }],
     "prettier/prettier": {

@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { createNeighbourIndex, isRight, isBottom } from './utils/boardHelpers';
+import { createNeighbourIndex } from './utils/boardHelpers';
 
-type Cell = {
-  id: string,
-  live: boolean,
-  neighbours: number[],
-}
 const initCell = (): Cell => ({
   id: '',
   live: false,
@@ -29,44 +24,20 @@ const setInitCellId = (index: number): CellId => ({
   id: `id${(index || 0)}`,
 });
 
-type State = {
+type BoardState = {
   boardStatus: Cell[]
 }
 
-type Props = {
+type BoardProps = {
   time: number,
   cellSize: number,
   spawnRate: number,
-  boardSize: number
+  boardSize: number,
+  render: any,
 }
 
-const reloadPage = (): void => window.location.reload();
-
-const generateStyle = (
-  cellSize: number,
-  live: boolean,
-  boardSize: number,
-  index: number,
-): React.CSSProperties => {
-  const border = '1px solid #000';
-  return {
-    display: 'inline-block',
-    width: `${cellSize}px`,
-    height: `${cellSize}px`,
-    margin: 0,
-    padding: 0,
-    lineHeight: 0,
-    background: live ? '#000' : '#fff',
-    boxSizing: 'border-box',
-    borderTop: border,
-    borderLeft: border,
-    borderRight: isRight(boardSize, index) ? border : 'none',
-    borderBottom: isBottom(boardSize, index) ? border : 'none',
-  };
-};
-
-class Board extends React.Component<Props, State> {
-  constructor(props: Props) {
+class Board extends React.Component<BoardProps, BoardState> {
+  constructor(props: BoardProps) {
     super(props);
 
     this.state = {
@@ -81,7 +52,7 @@ class Board extends React.Component<Props, State> {
     this.start = this.start.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.initBoardStatus();
   }
 
@@ -151,30 +122,19 @@ class Board extends React.Component<Props, State> {
   }
 
   render() {
+    const { boardSize, cellSize, render } = this.props;
     const { boardStatus } = this.state;
-    const { boardSize, cellSize } = this.props;
+
+    const childrenProps = {
+      boardSize,
+      cellSize,
+      boardStatus,
+      start: this.start,
+    };
 
     return (
       <div>
-        <h1>life gaming</h1>
-
-        <div>
-          <button type="button" onClick={this.start}>start</button>
-          <button type="button" onClick={reloadPage}>reload</button>
-        </div>
-
-        <div style={{ fontSize: 0 }}>
-          {boardStatus.map((cell: Cell, index: number): React.ReactNode => (
-            <span
-              key={cell.id}
-            >
-              <i
-                style={generateStyle(cellSize, cell.live, boardSize, index)}
-              />
-              {isRight(boardSize, index) && <br />}
-            </span>
-          ))}
-        </div>
+        {render(childrenProps)}
       </div>
     );
   }

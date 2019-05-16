@@ -1,6 +1,17 @@
 import React from 'react';
-import Board from './Board';
+import BoardContainer from './BoardContainer';
+import BoardView from './BoardView';
 
-const App: React.FC = () => <Board time={1000} boardSize={20} spawnRate={25} cellSize={16} />;
+const App: React.FC = () => (
+  <BoardContainer
+    time={1000}
+    boardSize={20}
+    spawnRate={25}
+    cellSize={16}
+    render={
+      (props: any) => <BoardView {...props} />
+    }
+  />
+);
 
 export default App;
