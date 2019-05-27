@@ -1,5 +1,5 @@
 import React from 'react';
-import BoardContainer from './BoardContainer';
+import BoardContainer from './BoardContainerHooks';
 import BoardView from './BoardView';
 
 const App: React.FC = () => (
