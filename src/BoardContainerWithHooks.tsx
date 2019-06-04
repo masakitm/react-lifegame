@@ -40,14 +40,14 @@ const Board = (props: BoardContainerProps) => {
     time, spawnRate, boardSize, cellSize, render,
   } = props;
 
-  const [boardStatus, updateBoardStatus] = useState<Cell[]>([]);
+  const [boardStatus, setBoardStatus] = useState<Cell[]>([]);
 
   const countLivingNeighbours = (neighbourList: number[]): number => {
     const live = neighbourList.map((num: number): boolean => boardStatus[num].live);
     return live.filter(cellLive => cellLive).length;
   };
 
-  const updateLive = (neighbourList: number[], isLive: boolean): boolean => {
+  const nextLiveStatus = (neighbourList: number[], isLive: boolean): boolean => {
     const liveCount = countLivingNeighbours(neighbourList);
 
     if (liveCount >= 4 || liveCount <= 1) { return false; }
@@ -56,13 +56,13 @@ const Board = (props: BoardContainerProps) => {
     return isLive;
   };
 
-  const runLifeCycle = (): void => {
+  const updateBoardStatus = (): void => {
     const nextBoardStatus: Cell[] = boardStatus.map((cell) => {
-      const live = updateLive(cell.neighbours, cell.live);
+      const live = nextLiveStatus(cell.neighbours, cell.live);
       return { ...cell, live };
     });
 
-    updateBoardStatus(nextBoardStatus);
+    setBoardStatus(nextBoardStatus);
   };
 
   const initBoardStatus = (): void => {
@@ -75,11 +75,11 @@ const Board = (props: BoardContainerProps) => {
       }),
     );
 
-    updateBoardStatus(newBoardStatus);
+    setBoardStatus(newBoardStatus);
   };
 
   const start = (): void => {
-    setInterval(runLifeCycle, time);
+    setInterval(updateBoardStatus, time);
   };
 
   useEffect(() => initBoardStatus(), []);
