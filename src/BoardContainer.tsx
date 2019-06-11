@@ -35,39 +35,33 @@ type BoardContainerProps = {
   boardSize: number,
   render: (props: BoardViewProps) => JSX.Element,
 }
-class Board extends React.Component<BoardContainerProps, BoardState> {
-  constructor(props: BoardContainerProps) {
-    super(props);
+class Board extends React.Component {
+  props: BoardContainerProps = this.props;
 
-    this.state = {
-      boardStatus: [],
-    };
+  state: BoardState = {
+    boardStatus: [],
+  };
 
-    this.hasFinished = this.hasFinished.bind(this);
-    this.countLivingNeighbours = this.countLivingNeighbours.bind(this);
-    this.updateLive = this.updateLive.bind(this);
-    this.runLifeCycle = this.runLifeCycle.bind(this);
-    this.initBoardStatus = this.initBoardStatus.bind(this);
-    this.start = this.start.bind(this);
-  }
-
-  componentDidMount(): void {
+  componentDidMount = (): void => {
     this.initBoardStatus();
   }
 
-  hasFinished(): boolean {
+  hasFinished = (): boolean => {
     const { boardStatus } = this.state;
     return boardStatus.every((cell: Cell) => cell.live === false);
   }
 
-  countLivingNeighbours(neighbourList: number[]): number {
-    const { boardStatus } = this.state;
+  countLivingNeighbours = (neighbourList: number[]): number => {
+    const { boardStatus }: { boardStatus: Cell[] } = this.state;
     const live = neighbourList.map((num: number): boolean => boardStatus[num].live);
 
     return live.filter(cellLive => cellLive).length;
   }
 
-  updateLive(neighbourList: number[], isLive: boolean): boolean {
+  updateLive = (
+    neighbourList: number[],
+    isLive: boolean,
+  ): boolean => {
     const liveCount = this.countLivingNeighbours(neighbourList);
 
     if (liveCount >= 4 || liveCount <= 1) {
@@ -85,12 +79,12 @@ class Board extends React.Component<BoardContainerProps, BoardState> {
     return isLive;
   }
 
-  runLifeCycle() {
+  runLifeCycle = () => {
     if (this.hasFinished()) {
       return;
     }
 
-    const { boardStatus } = this.state;
+    const { boardStatus }: { boardStatus: Cell[] } = this.state;
     const nextBoardStatus: Cell[] = boardStatus.map((cell) => {
       const live = this.updateLive(cell.neighbours, cell.live);
       return { ...cell, live };
@@ -99,7 +93,7 @@ class Board extends React.Component<BoardContainerProps, BoardState> {
     this.setState({ boardStatus: nextBoardStatus });
   }
 
-  initBoardStatus() {
+  initBoardStatus = () => {
     const { spawnRate, boardSize } = this.props;
 
     const newStatus: Cell[] = createBoardStatus(boardSize).map((cell: Cell, index: number) => ({
@@ -114,15 +108,15 @@ class Board extends React.Component<BoardContainerProps, BoardState> {
     });
   }
 
-  start() {
+  start = () => {
     const { runLifeCycle } = this;
     const { time } = this.props;
     setInterval(runLifeCycle, time);
   }
 
-  render() {
+  render = () => {
     const { boardSize, cellSize, render } = this.props;
-    const { boardStatus } = this.state;
+    const { boardStatus }: { boardStatus: Cell[] } = this.state;
 
     const childrenProps = {
       boardSize,
