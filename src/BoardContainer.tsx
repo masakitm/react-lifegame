@@ -58,7 +58,7 @@ class Board extends React.Component {
     return live.filter(cellLive => cellLive).length;
   }
 
-  updateLive = (
+  canLive = (
     neighbourList: number[],
     isLive: boolean,
   ): boolean => {
@@ -86,7 +86,7 @@ class Board extends React.Component {
 
     const { boardStatus }: { boardStatus: Cell[] } = this.state;
     const nextBoardStatus: Cell[] = boardStatus.map((cell) => {
-      const live = this.updateLive(cell.neighbours, cell.live);
+      const live = this.canLive(cell.neighbours, cell.live);
       return { ...cell, live };
     });
 
