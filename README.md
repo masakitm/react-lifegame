@@ -9,7 +9,7 @@ https://vigilant-pike-739058.netlify.com
 
 ### render propsについて
 
-vue.jsでいうscoped slotsと目的は近い実装方法です。　　
+vue.jsでいうscoped slotsと似た実装方法です。  
 状態、ロジックとビューを分離しプロジェクトの管理しやすさを保ちます。  
 
 ``` js
@@ -30,6 +30,9 @@ const SomeWrapperComponent => () => (
   <Parent render={ props: ChildProps => <Child { ...props } /> } />
 )
 ```
+
+今後はcustom hooksが取って代わって行くかと思いますが、  
+考え方の理解に非常に役立つ実装手法です。
 
 ### 主な参考資料
 
