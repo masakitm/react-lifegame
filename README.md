@@ -9,7 +9,7 @@ https://vigilant-pike-739058.netlify.com
 
 ### render propsについて
 
-vue.jsでいうscoped slotsと似た実装方法です。  
+再利用性を高める実装手法の一つです。vue.jsでいうscoped slotsと類似しています。  
 状態、ロジックとビューを分離しプロジェクトの管理しやすさを保ちます。  
 
 ``` js
